@@ -17,12 +17,14 @@ public class ClientApplication {
         SpringApplication.run(ClientApplication.class, args);
     }
 
+
     @Bean
-    RouterFunction<ServerResponse> routerFunction() {
+    RouterFunction<ServerResponse> routes() {
         return route()
                 .filter(TokenRelayFilterFunctions.tokenRelay())
                 .GET("/**", http("http://localhost:8080"))
                 .build();
     }
+
 
 }
