@@ -1,0 +1,14 @@
+type Query {
+
+    all :[Dog]
+}
+
+type Dog {
+    id:Int
+    name:String
+    owner:String
+    description: String
+}
+type Mutation {
+    adopt(dogId:Int, name:String) :Boolean
+}
