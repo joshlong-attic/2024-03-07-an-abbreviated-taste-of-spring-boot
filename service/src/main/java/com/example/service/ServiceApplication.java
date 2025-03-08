@@ -11,5 +11,20 @@ public class ServiceApplication {
     }
 
 
-
 }
+
+/*
+@Controller
+@ResponseBody
+class MeController {
+
+    @GetMapping("/me")
+    Map<String, String> token(Principal principal) {
+        var map = new HashMap<>(Map.of("details", principal.getName()));
+        if (principal instanceof JwtAuthenticationToken jwtAuthenticationToken) {
+            var token = jwtAuthenticationToken.getToken().getTokenValue();
+            map.put("token", token);
+        }
+        return map;
+    }
+}*/
