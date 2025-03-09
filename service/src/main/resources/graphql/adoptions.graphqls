@@ -1,9 +1,10 @@
-type Dog {
-    id:Int
-    name:String
-    description: String
-}
-
-type  Query {
+type Query {
     dogs : [Dog]
 }
+
+type Dog {
+    id: Int
+    name:String
+    description :String
+}
+

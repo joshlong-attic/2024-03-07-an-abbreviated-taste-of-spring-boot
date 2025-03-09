@@ -2,6 +2,11 @@ package com.example.service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.security.Principal;
 
 @SpringBootApplication
 public class ServiceApplication {
@@ -10,21 +15,14 @@ public class ServiceApplication {
         SpringApplication.run(ServiceApplication.class, args);
     }
 
-
 }
 
-/*
 @Controller
 @ResponseBody
 class MeController {
 
     @GetMapping("/me")
-    Map<String, String> token(Principal principal) {
-        var map = new HashMap<>(Map.of("details", principal.getName()));
-        if (principal instanceof JwtAuthenticationToken jwtAuthenticationToken) {
-            var token = jwtAuthenticationToken.getToken().getTokenValue();
-            map.put("token", token);
-        }
-        return map;
+    String me(Principal principal) {
+        return principal.getName();
     }
-}*/
+}

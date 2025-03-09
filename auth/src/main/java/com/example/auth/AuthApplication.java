@@ -6,8 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -25,27 +23,30 @@ public class AuthApplication {
     }
 
     @Bean
-    SecurityFilterChain mySecurityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .authorizeHttpRequests( ae ->ae.anyRequest().authenticated())
-                .with(authorizationServer () , ae -> ae.oidc(Customizer.withDefaults()))
-                .formLogin(Customizer.withDefaults())
-                .build() ;
-    }
-
-    @Bean
-    PasswordEncoder passwordEncoder() {
+    PasswordEncoder myPasswordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Bean
-    UserDetailsService myUserDetailsService(PasswordEncoder passwordEncoder) {
-        var users = Set.of(User.withUsername("jlong")
-                .password(passwordEncoder.encode("pw"))
+    InMemoryUserDetailsManager myInMemoryUserDetailsManager(PasswordEncoder pw) {
+        var users = Set.of(User
+                .withUsername("jlong")
+                .password(pw.encode("pw"))
                 .roles("USER")
                 .build());
-        return new InMemoryUserDetailsManager( users);
-
+        return new InMemoryUserDetailsManager(users);
     }
+
+    @Bean
+    SecurityFilterChain mySpringSecurityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .with(authorizationServer(), as -> as.oidc(Customizer.withDefaults()))
+                .authorizeHttpRequests(ae -> ae.anyRequest().authenticated())
+                .formLogin(Customizer.withDefaults())
+//				.oneTimeTokenLogin( c->c.tokenGenerationSuccessHandler())
+//				.webAuthn(Customizer.withDefaults())
+                .build();
+    }
+
 
 }
